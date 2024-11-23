@@ -68,4 +68,4 @@ def quineMcCluskey(bit, f):
 #                              0,    1,    2,                   5,   6,    7,    8,     9,   10,                        14
 funcionInicial = lambda num: [True, True, True, False, False, True, True, True, True, True, True, False, False, False, True, False][num]
 
-print(QuineMcCluskey(4, funcionInicial))
+print(quineMcCluskey(4, funcionInicial))
