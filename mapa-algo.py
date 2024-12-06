@@ -76,55 +76,40 @@ def quineMcCluskey(bit: int, f) -> list:
 
         numeros[numBitUno(num)].append(Numero([num]))
     
-    parejas = []
-    for i in range(len(numeros) - 1):
-        parejas.append([])
-        previo = numeros[i]
-        siguiente = numeros[i + 1]
-
-        for numPrevio in previo:
-            for numSiguiente in siguiente:
-                if diferenciaNum([*numPrevio.numeros])[1] != diferenciaNum([*numSiguiente.numeros])[1]:
-                    continue
-
-                if not diferenciaUnBit([*numPrevio.numeros, *numSiguiente.numeros]):
-                    continue
-                    
-                numPrevio.fueUsado()
-                numSiguiente.fueUsado()
-                parejas[i].append(Numero([*numPrevio.numeros, *numSiguiente.numeros]))
-
+    parejasPrevias = numeros
+    parejasNuevas = []
     parejasNoUsadas = []
-    for nivel in numeros:
-        parejasNoUsadas += list(filter(lambda numero: not numero.usado, nivel))
 
-    parejas2 = []
-    for i in range(len(parejas) - 1):
-        parejas2.append([])
-        previo = parejas[i]
-        siguiente = parejas[i + 1]
+    while True:
+        agregoNuevaPareja = False
 
-        if len(previo) == 0 or len(siguiente) == 0:
-            continue
+        for i in range(len(parejasPrevias) - 1):
+            parejasNuevas.append([])
+            previo = parejasPrevias[i]
+            siguiente = parejasPrevias[i + 1]
 
-        for numPrevio in previo:
-            for numSiguiente in siguiente:
-                if diferenciaNum([*numPrevio.numeros])[1] != diferenciaNum([*numSiguiente.numeros])[1]:
-                    continue
+            for numPrevio in previo:
+                for numSiguiente in siguiente:
+                    if diferenciaNum([*numPrevio.numeros])[1] != diferenciaNum([*numSiguiente.numeros])[1]:
+                        continue
 
-                if not diferenciaUnBit([*numPrevio.numeros, *numSiguiente.numeros]):
-                    continue
-                    
-                numPrevio.fueUsado()
-                numSiguiente.fueUsado()
-                parejas2[i].append(Numero([*numPrevio.numeros, *numSiguiente.numeros]))
+                    if not diferenciaUnBit([*numPrevio.numeros, *numSiguiente.numeros]):
+                        continue
 
+                    agregoNuevaPareja = True
 
-    for nivel in parejas:
-        parejasNoUsadas += list(filter(lambda numero: not numero.usado, nivel))
+                    numPrevio.fueUsado()
+                    numSiguiente.fueUsado()
+                    parejasNuevas[i].append(Numero([*numPrevio.numeros, *numSiguiente.numeros]))
 
-    for nivel in parejas2:
-        parejasNoUsadas += nivel
+        for nivel in parejasPrevias:
+            parejasNoUsadas += list(filter(lambda numero: not numero.usado, nivel))
+
+        if not agregoNuevaPareja:
+            break
+        
+        parejasPrevias = parejasNuevas
+        parejasNuevas = []
 
     parejasFinales = {}
     for pareja in parejasNoUsadas:
